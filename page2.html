@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Mortgage Calculator Markup</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/fizzbuzz.css">
+    <link rel="stylesheet" href="/CSS/prismOkaida.css">
+  </head>
+  <body >
+
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">Mortgage Calculator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="page1.html">The App</a> 
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="page2.html">See The Code </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" target="_blank">Get The Code</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://mansamusa.netlify.app" target="_blank">Contact Developer</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="container">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-6 offset-4">
+            <div class="title">
+              <h1>Javascript Markup</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+            <!-- Javascript Markup window for App-->
+            <div class="container">
+              <div class="row">
+                <div class="col line-numbers">
+                  <pre><code class="language-javascript">
+//This function grabs each value that the user entered
+function numbersEntered() {
+    //Loan amount entered by user
+    let amount = Number(document.getElementById("amount").value);
+    //Interest amount entered by user
+    let interestRate = document.getElementById("interestRate").value;
+    //Loan term
+    let months = document.getElementById("months").value;
+
+    let loanNumbers = calculateLoan(amount, interestRate, months);
+
+displayData(loanNumbers, amount);
+    
+
+}
+//This Function calculates our interestRate and monthlyPayments
+//also creates a for loop for our payment schedule table 
+function calculateLoan(amount, interestRate, months){
+    let rate = interestRate / 1200;
+    //Formula for monthly payments
+    let monthlyPayment = (amount) * (rate) / (1 - Math.pow((1 + rate), -months));
+    let remainingBalance = amount;
+    let totalInterest = 0;
+    let totalPrincipal = 0;
+    //displays monthly payment and principle to UI
+    document.getElementById("monthlyPayment").innerHTML = `$${monthlyPayment.toFixed(2)}`;
+    document.getElementById("totalPrinciple").innerHTML = `$${amount}`;
+
+    let output = [];
+//In this for loop we are looping through an object 
+//that pushes new information to the end of the list until it reaches the max month
+    for(let i = 1; i <= months; i++){
+        let interestPayment = remainingBalance * rate;
+        let principalPayment = monthlyPayment - interestPayment;
+        let obj = {};
+        obj["month"] = i;
+        obj["payment"] = monthlyPayment;
+        obj["interest"] = interestPayment;
+        obj["principal"] = principalPayment;
+        obj["balance"] = remainingBalance -= principalPayment;
+        obj["currentPTotal"] = currentPTotal = totalPrincipal += principalPayment;
+        obj["totalInterest"] = currentITotal = totalInterest += interestPayment;
+        obj["currentTTotal"] = currentPTotal + currentITotal;
+        
+        output.push(obj);
+    }
+
+    return output;
+}
+
+//This function displays data to the resultsBody which is linked to the HTML
+function displayData(addMortgage, amount) {
+    const template = document.getElementById("Data-template");
+    const resultsBody = document.getElementById("resultsBody");
+//This for loop loops through the template and inserts row data until the array reaches addMortgage.length
+    resultsBody.innerHTMl = "";
+    for (let i = 0; i <= addMortgage.length; i++) {
+        const dataRow = document.importNode(template.content, true);
+
+        dataRow.getElementById("month").textContent = addMortgage[i].month;
+        dataRow.getElementById("payment").textContent = `$${addMortgage[i].payment.toFixed(2)}`;
+        dataRow.getElementById("principal").textContent = `$${addMortgage[i].principal.toFixed(2)}`;
+        dataRow.getElementById("interest").textContent = `$${addMortgage[i].interest.toFixed(2)}`;
+        dataRow.getElementById("totalInterest").textContent = `$${addMortgage[i].totalInterest.toFixed(2)}`;
+        dataRow.getElementById("balance").textContent = `$${addMortgage[i].balance.toFixed(2)}`;
+
+        resultsBody.appendChild(dataRow)
+
+        if(i == addMortgage.length - 1){
+            document.getElementById("totalInterest").innerHTML = `$${addMortgage[i].totalInterest.toFixed(2)}`;
+            document.getElementById("totalCost").innerHTML = `$${(parseInt(amount) + parseInt(addMortgage[i].totalInterest)).toFixed(2)}`;        
+        }
+    }
+}                    </code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+      
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Samuel Musa</span></strong>
+        </div>
+      </div>
+    </footer>
+
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/js/prismOkaida.js"></script>
+  </body>
+</html>
